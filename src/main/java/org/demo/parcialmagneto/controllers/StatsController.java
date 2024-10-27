@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/stats")
+@RequestMapping("/api")
 public class StatsController {
 
     private final StatsService statsService;
@@ -16,7 +16,7 @@ public class StatsController {
         this.statsService = statsService;
     }
 
-    @GetMapping
+    @GetMapping("/stats/")
     public StatsResponse getStats() {
         return statsService.getStats();
     }

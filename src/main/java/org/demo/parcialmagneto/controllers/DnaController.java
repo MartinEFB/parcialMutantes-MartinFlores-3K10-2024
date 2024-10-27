@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/mutant")
+@RequestMapping("/api")
 @Validated
 public class DnaController {
 
@@ -20,7 +20,7 @@ public class DnaController {
         this.dnaService = dnaService;
     }
 
-    @PostMapping("/")
+    @PostMapping("/mutant/")
     public ResponseEntity<Void> isMutant(@RequestBody DnaRequest dnaRequest) {
         boolean isMutant = dnaService.analyzeDna(dnaRequest.getDna()); // Llamar a analyzeDna
         return isMutant ? ResponseEntity.ok().build() : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
