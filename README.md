@@ -59,30 +59,32 @@ Ejemplo de matriz **MUTANTE**:
 
 ```json
 {
-    "dna": [
-      "ATGCGA",
-      "CAGTGC",
-      "TTATGT",
-      "AGAAAG",
-      "CCCCTA",
-      "TCACTG"
-    ]
+  "dna": [
+    "AAAAAA",
+    "CCCCAA",
+    "TTTTCA",
+    "GGTGAA",
+    "CCGTAA",
+    "AAGTAA"
+  ]
 }
+
 ```
 
 Ejemplo de matriz **NO MUTANTE**:
 
 ```json
 {
-    "dna": [
-      "ATGGTG",
-      "GTCTTA",
-      "AATTGG",
-      "ACTAGT",
-      "GGATTC", 
-      "AGGCAA"
-    ]
+  "dna": [
+    "TAGTGA",
+    "CTGATA",
+    "CGTCAG",
+    "TGATGT",
+    "AGCTTC",
+    "GCGGAC"
+  ]
 }
+
 ```
 
 ## Pruebas Unitarias
