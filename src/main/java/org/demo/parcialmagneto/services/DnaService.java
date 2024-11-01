@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 @Service
 public class DnaService {
@@ -23,83 +21,81 @@ public class DnaService {
     }
 
     public boolean isMutant(String[] dna) {
-        AtomicInteger sequenceCount = new AtomicInteger(0);
         int n = dna.length;
+        int sequenceCount = 0;
 
-        // Verificar filas
-        for (int row = 0; row < n; row++) {
-            sequenceCount.addAndGet(hasRepeatedSequence(dna[row]));
-            // Parada temprana si ya se encontró más de una secuencia mutante
-            if (sequenceCount.get() > 1) return true;
-        }
-
-        // Verificar columnas
-        for (int col = 0; col < n; col++) {
-            StringBuilder columnData = new StringBuilder();
-            for (int i = 0; i < n; i++) {
-                columnData.append(dna[i].charAt(col));
+        // Verificar filas y columnas
+        for (int i = 0; i < n; i++) {
+            // Verificar fila
+            if (hasRepeatedSequence(dna[i])) {
+                sequenceCount++;
             }
-            sequenceCount.addAndGet(hasRepeatedSequence(columnData.toString()));
-            // Parada temprana si ya se encontró más de una secuencia mutante
-            if (sequenceCount.get() > 1) return true;
+            // Verificar columna
+            StringBuilder columnData = new StringBuilder();
+            for (int j = 0; j < n; j++) {
+                columnData.append(dna[j].charAt(i));
+            }
+            if (hasRepeatedSequence(columnData.toString())) {
+                sequenceCount++;
+            }
+            // Parada temprana
+            if (sequenceCount > 1) return true;
         }
 
         // Verificar diagonales
-        checkDiagonals(dna, sequenceCount);
-
-        // Retornar true si se encontró más de una secuencia mutante
-        return sequenceCount.get() > 1;
+        sequenceCount += checkDiagonals(dna);
+        return sequenceCount > 1;
     }
 
-
-
-    private int hasRepeatedSequence(String s) {
-        Set<String> seenSequences = new HashSet<>();
-        int count = 0;
-
-        for (int i = 0; i <= s.length() - SEQUENCE_LENGTH; i++) {
-            String sequence = s.substring(i, i + SEQUENCE_LENGTH);
-
-            // Verificamos si la secuencia no ha sido vista antes y es una secuencia mutante
-            if (seenSequences.add(sequence) && sequence.chars().distinct().count() == 1) {
-                count++; // Aumentar el contador si encontramos una nueva secuencia mutante
-            }
-        }
-        return count; // Retornar el conteo de secuencias mutantes encontradas
-    }
-
-
-    private void checkDiagonals(String[] dna, AtomicInteger sequenceCount) {
+    private int checkDiagonals(String[] dna) {
+        int sequenceCount = 0;
         int n = dna.length;
 
-        // Diagonales principales (de arriba-izquierda a abajo-derecha)
+        // Diagonales principales y secundarias en un solo bucle
         for (int i = 0; i <= n - SEQUENCE_LENGTH; i++) {
             for (int j = 0; j <= n - SEQUENCE_LENGTH; j++) {
-                StringBuilder diagonal = new StringBuilder();
-                for (int k = 0; k < SEQUENCE_LENGTH; k++) {
-                    diagonal.append(dna[i + k].charAt(j + k));
+                // Diagonal principal
+                if (isMutantDiagonal(dna, i, j, false)) { // Validación para diagonal principal
+                    sequenceCount++;
                 }
-                sequenceCount.addAndGet(hasRepeatedSequence(diagonal.toString()));
-                // Parada temprana si ya se encontró más de una secuencia mutante
-                if (sequenceCount.get() > 1) return;
+                // Diagonal secundaria
+                if (j >= SEQUENCE_LENGTH - 1 && isMutantDiagonal(dna, i, j, true)) { // Validar j para diagonal secundaria
+                    sequenceCount++;
+                }
+                // Parada temprana
+                if (sequenceCount > 1) return sequenceCount;
             }
         }
+        return sequenceCount;
+    }
 
-        // Diagonales secundarias (de arriba-derecha a abajo-izquierda)
-        for (int i = 0; i <= n - SEQUENCE_LENGTH; i++) {
-            for (int j = SEQUENCE_LENGTH - 1; j < n; j++) {
-                StringBuilder diagonal = new StringBuilder();
-                for (int k = 0; k < SEQUENCE_LENGTH; k++) {
-                    diagonal.append(dna[i + k].charAt(j - k));
-                }
-                sequenceCount.addAndGet(hasRepeatedSequence(diagonal.toString()));
-                // Parada temprana si ya se encontró más de una secuencia mutante
-                if (sequenceCount.get() > 1) return;
-            }
+    private boolean isMutantDiagonal(String[] dna, int i, int j, boolean secondary) {
+        char c = dna[i].charAt(j);
+        if (secondary) {
+            // Verificar si no se sale del límite para diagonal secundaria
+            return c == dna[i + 1].charAt(j - 1) && c == dna[i + 2].charAt(j - 2) && c == dna[i + 3].charAt(j - 3);
+        } else {
+            // Verificar si no se sale del límite para diagonal principal
+            return c == dna[i + 1].charAt(j + 1) && c == dna[i + 2].charAt(j + 2) && c == dna[i + 3].charAt(j + 3);
         }
     }
 
 
+
+    private boolean hasRepeatedSequence(String s) {
+        Set<String> seenSequences = new HashSet<>();
+        int n = s.length();
+
+        // Hash Rolling para encontrar secuencias
+        for (int i = 0; i <= n - SEQUENCE_LENGTH; i++) {
+            String sequence = s.substring(i, i + SEQUENCE_LENGTH);
+            if (seenSequences.contains(sequence)) {
+                return true; // Secuencia encontrada
+            }
+            seenSequences.add(sequence);
+        }
+        return false; // Ninguna secuencia repetida
+    }
 
     public boolean analyzeDna(String[] dna) {
         String dnaSequence = String.join(",", dna);
@@ -121,5 +117,4 @@ public class DnaService {
 
         return isMutant;
     }
-
 }
