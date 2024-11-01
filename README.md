@@ -76,17 +76,22 @@ Ejemplo de matriz **NO MUTANTE**:
 ```json
 {
   "dna": [
-    "TAGTGA",
-    "CTGATA",
-    "CGTCAG",
-    "TGATGT",
-    "AGCTTC",
-    "GCGGAC"
+    "TACGAC",
+    "GGTACC",
+    "CCTTAG",
+    "AGCCTG",
+    "CAAACC",
+    "GCAGTC"
   ]
 }
 
+
 ```
 
-## Pruebas Unitarias
+## Entorno Local
+Esta API REST esta preparada para utilizar una base de datos H2, para ejecutarla en un entorno local se debera utilizar una copia del Github y correrla. 
+El link para levantar la base de datos desde un navegador es: 
 
-Se incluyen casos de pruebas contemplando todos los patrones posibles (en filas, columnas y diagonales).
+http://localhost:8080/h2-console/
+
+Para realizar las mismas operaciones POST y GET se utilizan los endpoints anteriores, estos se aplican en una herramienta de pruebas de API como por ejemplo PostMan.
