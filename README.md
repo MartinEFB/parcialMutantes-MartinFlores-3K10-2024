@@ -25,11 +25,11 @@ Una vez cargada correctamente la misma, se aplica una función que verifica si h
 
 El proyecto ha sido deployado a Render y puede ser accedido mediante el siguiente link:
 
-https://parcial-magneto.onrender.com
+https://parcialmutantes-martinflores-3k10-2024.onrender.com
 
 ### Endpoints
 
-- **POST** /mutant - Recibe un JSON con la matriz de ADN a verificar. Ejemplo:
+- **POST** /api/mutant/ - Recibe un JSON con la matriz de ADN a verificar. Ejemplo:
 
 ```json
 {
@@ -43,7 +43,7 @@ https://parcial-magneto.onrender.com
     ]
 }
 ```
-- **GET** /stats - Devuelve un JSON con la cantidad de mutantes y humanos verificados. Ejemplo:
+- **GET** /api/stats - Devuelve un JSON con la cantidad de mutantes y humanos verificados. Ejemplo:
 
 ```json
 {
